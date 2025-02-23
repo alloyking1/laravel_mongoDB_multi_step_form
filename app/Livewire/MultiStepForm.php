@@ -4,7 +4,7 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
-// use App\Models\MultiStepForm;
+use App\Models\MultiStepForm as MultiStepFormDB;
 
 class MultiStepForm extends Component
 {
@@ -51,15 +51,21 @@ class MultiStepForm extends Component
 
     public function saveProgress()
     {
-        MultiStepForm::create([
-            'name' => $this->name,
-            'email' => $this->email,
-            'address' => $this->address,
-            'city' => $this->city,
-            'gender' => $this->gender,
-        ]);
+        try{
+            MultiStepFormDB::create([
+                'name' => $this->name,
+                'email' => $this->email,
+                'address' => $this->address,
+                'city' => $this->city,
+                'gender' => $this->gender,
+            ]);
 
-        return redirect()->back()->with('success', 'Task created successfully.');
+            session()->flash('success', 'Form saved successfully');
+        }catch(\Exception $e){
+
+            \Log::error('Error saving MultiStepForm: ' . $e->getMessage());
+            session()->flash('error', 'There was an error saving your data. Please try again.');
+        }
     }
 
     public function render()

@@ -1,5 +1,10 @@
 <div>
     <div class="max-w-4xl mx-auto p-6 bg-white shadow-xl rounded-xl">
+        @if (session('success'))
+            <div class="mb-4 p-4 bg-green-100 text-green-700 rounded-lg">
+                {{ session('success') }}
+            </div>
+        @endif
         <h1 class="text-4xl">Multi step form with MongoDB</h1>
         <h2 class="text-base font-semibold mb-4">Step {{ $currentStep }} of 3</h2>
 
@@ -33,7 +38,7 @@
             @if ($currentStep == 3)
                 <div>
                     <label class="block">Gender</label>
-                    <select wire:model="Gender" class="border p-2 w-full">
+                    <select wire:model="gender" class="border p-2 w-full">
                         <option value="male">Male</option>
                         <option value="female">Female</option>
                     </select>
@@ -48,7 +53,12 @@
                 @if ($currentStep < 3)
                     <button wire:click="nextStep" class="px-4 py-2 bg-blue-500 text-white rounded">Next</button>
                 @else
-                    <button wire:click="saveProgress" class="px-4 py-2 bg-green-500 text-white rounded">Submit</button>
+                    <button wire:click="saveProgress" wire:loading.class="opacity-50" class="px-4 py-2 bg-green-500 text-white rounded">
+                        <span wire:loading.remove>Save</span>
+                        <span wire:loading>
+                            Loading..
+                        </span>
+                    </button>
                 @endif
             </div>
         </div>
