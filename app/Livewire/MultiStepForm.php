@@ -38,6 +38,7 @@ class MultiStepForm extends Component
                 'name' => 'required|string',
                 'email' => 'required|email',
             ];
+            $this->validate($rules);
             $this->saveProgress($this->email, ['name' => $this->name], ['email' => $this->email]);
             session()->flash('success', 'Step '.$this->currentStep.' saved');
 
@@ -46,6 +47,7 @@ class MultiStepForm extends Component
                 'address' => 'required|string',
                 'city' => 'required|string',
             ];
+            $this->validate($rules);
             $this->saveProgress($this->email, ['address' => $this->address], ['city' => $this->city]);
             session()->flash('success', 'Step '.$this->currentStep.' saved');
 
@@ -53,11 +55,10 @@ class MultiStepForm extends Component
             $rules = [
                 'gender' => 'required|string',
             ];
+            $this->validate($rules);
             $this->saveProgress($this->email, ['gender' => $this->gender]);
             session()->flash('success', 'Step '.$this->currentStep.' saved');
         }
-
-        $this->validate($rules);
     }
 
     public function saveProgress($email, ...$formFields)
