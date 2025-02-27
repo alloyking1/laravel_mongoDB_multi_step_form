@@ -22,7 +22,6 @@ class MultiStepForm extends Component
         $this->validateStep();
         if($this->currentStep < $this->totalSteps){
             $this->currentStep++;
-            session()->flash('success', 'Step '.($this->currentStep - 1).' saved');
         }
     }
 
@@ -40,6 +39,7 @@ class MultiStepForm extends Component
                 'email' => 'required|email',
             ];
             $this->saveProgress($this->email, ['name' => $this->name], ['email' => $this->email]);
+            session()->flash('success', 'Step '.$this->currentStep.' saved');
 
         }elseif($this->currentStep === 2){
             $rules = [
@@ -47,12 +47,14 @@ class MultiStepForm extends Component
                 'city' => 'required|string',
             ];
             $this->saveProgress($this->email, ['address' => $this->address], ['city' => $this->city]);
+            session()->flash('success', 'Step '.$this->currentStep.' saved');
 
         }elseif($this->currentStep === 3){
             $rules = [
                 'gender' => 'required|string',
             ];
             $this->saveProgress($this->email, ['gender' => $this->gender]);
+            session()->flash('success', 'Step '.$this->currentStep.' saved');
         }
 
         $this->validate($rules);
