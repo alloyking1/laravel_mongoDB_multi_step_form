@@ -20,7 +20,10 @@ class MultiStepForm extends Component
     public function nextStep()
     {
         $this->validateStep();
-        $this->currentStep++;
+        if($this->currentStep < $this->totalSteps){
+            $this->currentStep++;
+            session()->flash('success', 'Step '.($this->currentStep - 1).' saved');
+        }
     }
 
     public function previousStep()
@@ -31,36 +34,41 @@ class MultiStepForm extends Component
     public function validateStep()
     {
         if($this->currentStep === 1){
+
             $rules = [
                 'name' => 'required|string',
                 'email' => 'required|email',
             ];
+            $this->saveProgress($this->email, ['name' => $this->name], ['email' => $this->email]);
+
         }elseif($this->currentStep === 2){
             $rules = [
                 'address' => 'required|string',
                 'city' => 'required|string',
             ];
+            $this->saveProgress($this->email, ['address' => $this->address], ['city' => $this->city]);
+
         }elseif($this->currentStep === 3){
             $rules = [
                 'gender' => 'required|string',
             ];
+            $this->saveProgress($this->email, ['gender' => $this->gender]);
         }
 
         $this->validate($rules);
     }
 
-    public function saveProgress()
+    public function saveProgress($email, ...$formFields)
     {
-        try{
-            MultiStepFormDB::create([
-                'name' => $this->name,
-                'email' => $this->email,
-                'address' => $this->address,
-                'city' => $this->city,
-                'gender' => $this->gender,
-            ]);
+        $data = [];
+        foreach($formFields as $value){
+            if (is_array($formFields)) {
+                $data = array_merge($data, $value);
+            }
+        }
 
-            session()->flash('success', 'Form saved successfully');
+        try{
+            MultiStepFormDB::updateOrCreate(['email' => $email], $data);
         }catch(\Exception $e){
 
             \Log::error('Error saving MultiStepForm: ' . $e->getMessage());

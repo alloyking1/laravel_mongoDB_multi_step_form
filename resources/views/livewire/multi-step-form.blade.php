@@ -51,9 +51,14 @@
                 @endif
     
                 @if ($currentStep < 3)
-                    <button wire:click="nextStep" class="px-4 py-2 bg-blue-500 text-white rounded">Next</button>
+                    <button wire:click="nextStep" wire:loading.class="opacity-50" class="px-4 py-2 bg-blue-500 text-white rounded">
+                        <span wire:loading.remove>Next</span>
+                        <span wire:loading>
+                            Loading..
+                        </span>
+                    </button>
                 @else
-                    <button wire:click="saveProgress" wire:loading.class="opacity-50" class="px-4 py-2 bg-green-500 text-white rounded">
+                    <button wire:click="nextStep" wire:loading.class="opacity-50" class="px-4 py-2 bg-green-500 text-white rounded">
                         <span wire:loading.remove>Save</span>
                         <span wire:loading>
                             Loading..
